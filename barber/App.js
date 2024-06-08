@@ -1,9 +1,11 @@
 // App.js
+
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
-import SignUpScreen  from './screens/SignUpScreen';
+import SignUpScreen from './screens/SignUpScreen';
+import HomeScreen from './screens/HomeScreen'; // Importa a tela HomeScreen
 
 const Stack = createStackNavigator();
 
@@ -16,17 +18,35 @@ export default function App() {
           name="SignUp"
           component={SignUpScreen}
           options={{
-            title: 'Cadastro', // Define o título da tela como "Cadastro"
+            title: 'Cadastro',
             headerStyle: {
-              backgroundColor: '#D11616', // Define a cor de fundo do cabeçalho
+              backgroundColor: '#D11616',
             },
-            headerTintColor: '#fff', // Define a cor do texto do cabeçalho
+            headerTintColor: '#fff',
             headerTitleStyle: {
-              fontWeight: 'bold', // Define o estilo do título do cabeçalho
+              fontWeight: 'bold',
             },
-            headerBackTitleVisible: false, // Esconde o título do botão de voltar
+            headerBackTitleVisible: false,
             headerBackTitleStyle: {
-              color: 'blue', // Define a cor do texto do botão de voltar
+              color: 'blue',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: 'Home',
+            headerStyle: {
+              backgroundColor: '#D11616',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+            headerBackTitleVisible: false,
+            headerBackTitleStyle: {
+              color: 'blue',
             },
           }}
         />
@@ -34,5 +54,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Alert, Text, TouchableOpacity, Image, KeyboardAvoidingView, Platform } from 'react-native';
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, updateProfile } from 'firebase/auth';
 import { auth } from '../firebase';
 import { Ionicons } from '@expo/vector-icons'; // Importando Ionicons
 
@@ -24,26 +24,25 @@ export default function SignUpScreen({ navigation }) {
 
     // Verifica se o email já está cadastrado
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        // Se o email já existe, exibe mensagem de erro
-        Alert.alert('Email já cadastrado', 'O email informado já está cadastrado.');
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        updateProfile(user, {
+          displayName: name // Define o nome do usuário
+        })
+        .then(() => {
+          console.log("Nome de usuário atualizado:", auth.currentUser.displayName);
+          Alert.alert('Cadastro realizado', 'Sua conta foi criada com sucesso.');
+          navigation.navigate('Login');
+        })
+        .catch((error) => {
+          // Trate o erro ao atualizar o perfil do usuário
+          Alert.alert('Erro ao cadastrar', error.message);
+        });
       })
-      .catch(error => {
-        // Se o email não existe, prossegue com o cadastro
-        if (error.code === 'auth/user-not-found') {
-          createUserWithEmailAndPassword(auth, email, password)
-            .then(() => {
-              Alert.alert('Cadastro realizado', 'Sua conta foi criada com sucesso.');
-              navigation.navigate('Login');
-            })
-            .catch(error => {
-              Alert.alert('Erro ao cadastrar', error.message);
-            });
-        } else {
-          // Em caso de outros erros, exibe mensagem genérica
-          Alert.alert('Erro', 'Ocorreu um erro ao verificar o email, Email já foi cadastrado ou digitado Errado.');
-        }
+      .catch((error) => {
+        // Trate o erro ao criar a conta do usuário
+        Alert.alert('Erro ao cadastrar', error.message);
       });
   };
 
