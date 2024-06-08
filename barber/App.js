@@ -5,7 +5,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen';
-import HomeScreen from './screens/HomeScreen'; // Importa a tela HomeScreen
+import HomeScreen from './screens/HomeScreen'; 
+import AppointmentScreen from './screens/AppointmentScreen'; // Importa a tela de agendamentos
+import MyAppointmentsScreen from './screens/MyAppointmentsScreen'; // Importa a tela de "Meus Agendamentos"
 
 const Stack = createStackNavigator();
 
@@ -47,6 +49,35 @@ export default function App() {
             headerBackTitleVisible: false,
             headerBackTitleStyle: {
               color: 'blue',
+            },
+            headerLeft: null,
+          }}
+        />
+        <Stack.Screen
+          name="Appointment"
+          component={AppointmentScreen}
+          options={{
+            title: 'Agendamento',
+            headerStyle: {
+              backgroundColor: '#D11616',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        <Stack.Screen
+          name="MyAppointments"
+          component={MyAppointmentsScreen}
+          options={{
+            title: 'Meus Agendamentos',
+            headerStyle: {
+              backgroundColor: '#D11616',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
             },
           }}
         />
