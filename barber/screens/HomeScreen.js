@@ -79,7 +79,7 @@ const barbersData = [
         night: ['18:00', '19:00', '20:00', '21:00', '22:00'],
       },
   },
-  // Adicione mais barbeiros conforme necessário
+  // Adicionar mais barbeiros conforme necessário
 ];
 
 export default function HomeScreen({ navigation, route }) {

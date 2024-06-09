@@ -1,7 +1,7 @@
 // WelcomeScreen.js
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Importa o ícone desejado
+import { Ionicons } from '@expo/vector-icons'; 
 
 const WelcomeScreen = ({ navigation }) => {
   const handleStartNow = () => {
@@ -25,17 +25,17 @@ const WelcomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover', // ou 'stretch' para esticar a imagem para preencher o conteúdo
+    resizeMode: 'cover', 
     justifyContent: 'center',
     alignItems: 'center',
   },
   container: {
-    position: 'absolute', // Posiciona o container de forma absoluta
-    bottom: 0, // Alinha o container ao fundo da tela
-    left: 0, // Alinha o container à esquerda da tela
-    marginBottom: 50, // Adiciona um espaçamento inferior
-    marginLeft: 20, // Adiciona um espaçamento à esquerda
-    alignItems: 'flex-start', // Alinha os itens no início do container
+    position: 'absolute', 
+    bottom: 0, 
+    left: 0, 
+    marginBottom: 50, 
+    marginLeft: 20, 
+    alignItems: 'flex-start', 
   },
   startButton: {
     backgroundColor: '#D11616',
@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   buttonContent: {
-    flexDirection: 'row', // Define a direção da linha como horizontal
-    alignItems: 'center', // Alinha os itens no centro
+    flexDirection: 'row', 
+    alignItems: 'center', 
   },
   buttonText: {
     color: '#fff',
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   icon: {
-    marginLeft: 5, // Adiciona espaçamento entre o ícone e o texto
+    marginLeft: 5,
   },
 });
 

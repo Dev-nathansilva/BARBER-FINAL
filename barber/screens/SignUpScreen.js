@@ -28,7 +28,7 @@ export default function SignUpScreen({ navigation }) {
       .then((userCredential) => {
         const user = userCredential.user;
         updateProfile(user, {
-          displayName: name // Define o nome do usuário
+          displayName: name 
         })
         .then(() => {
           console.log("Nome de usuário atualizado:", auth.currentUser.displayName);
@@ -36,12 +36,10 @@ export default function SignUpScreen({ navigation }) {
           navigation.navigate('Login');
         })
         .catch((error) => {
-          // Trate o erro ao atualizar o perfil do usuário
           Alert.alert('Erro ao cadastrar', error.message);
         });
       })
       .catch((error) => {
-        // Trate o erro ao criar a conta do usuário
         Alert.alert('Erro ao cadastrar', error.message);
       });
   };

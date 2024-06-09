@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     margin: 5,
-    position: 'relative', // Added for positioning
+    position: 'relative', 
   },
   selectedTimeSlot: {
     backgroundColor: '#D11616',

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { auth } from '../firebase';
 import { updateProfile, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider, sendEmailVerification } from 'firebase/auth';
-import { useNavigation } from '@react-navigation/native'; // Importe o método useNavigation
+import { useNavigation } from '@react-navigation/native'; 
 import { Ionicons } from '@expo/vector-icons';
 
 const EditProfileScreen = ({ route }) => {
@@ -10,7 +10,7 @@ const EditProfileScreen = ({ route }) => {
   const [userName, setUserName] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const navigation = useNavigation(); // Obtenha a referência para o objeto de navegação
+  const navigation = useNavigation(); 
 
   useEffect(() => {
     const currentUser = auth.currentUser;
