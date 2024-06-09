@@ -8,7 +8,7 @@
 
 ## Clone esse Repositório
 ```bash
-$ git clone https://github.com/ojeffoinheiro/barber.git
+$ git clone https://github.com/Dev-nathansilva/BARBER-FINAL.git
 ```
 ## Acesse a pasta do repositório
 ```bash
