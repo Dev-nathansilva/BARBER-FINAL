@@ -1,30 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Alert  } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { collection, addDoc } from 'firebase/firestore';
+import { MaterialIcons } from '@expo/vector-icons'; // Import the icon library
+import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
-
-
 
 export default function AppointmentScreen({ route, navigation }) {
   const { barber, userName } = route.params;
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [bookedTimes, setBookedTimes] = useState([]);
 
-  const onChangeDate = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
+  useEffect(() => {
+    const fetchBookedTimes = async () => {
+      const dateStr = selectedDate.toISOString().split('T')[0];
+      const q = query(collection(firestore, 'appointments'), where('date', '==', dateStr), where('barberName', '==', barber.name));
+      const querySnapshot = await getDocs(q);
+      const fetchedTimes = querySnapshot.docs.map(doc => doc.data().time);
+      setBookedTimes(fetchedTimes);
+    };
+
+    fetchBookedTimes();
+  }, [selectedDate, barber.name]);
+
+  const onChangeDate = (event, date) => {
+    const currentDate = date || selectedDate;
     setSelectedDate(currentDate);
   };
 
   const handleTimeSelection = (time) => {
-    setSelectedTime(time);
+    if (!bookedTimes.includes(time)) {
+      setSelectedTime(time);
+    } else {
+      Alert.alert('Horário indisponível', 'Este horário já está agendado. Por favor, escolha outro horário.');
+    }
   };
 
-
   const handleAppointment = async () => {
-
     if (!selectedDate || !selectedTime) {
       Alert.alert('Por favor, selecione uma data e um horário.');
       return;
@@ -46,6 +60,25 @@ export default function AppointmentScreen({ route, navigation }) {
     }
   };
 
+  const renderTimeSlot = (time) => {
+    const isBooked = bookedTimes.includes(time);
+    return (
+      <TouchableOpacity
+        key={time}
+        style={[styles.timeSlot, selectedTime === time && styles.selectedTimeSlot, isBooked && styles.bookedTimeSlot]}
+        onPress={() => handleTimeSelection(time)}
+        disabled={isBooked}
+      >
+        <Text style={[styles.timeSlotText, selectedTime === time && styles.selectedTimeSlotText, isBooked && styles.bookedTimeSlotText]}>
+          {time}
+        </Text>
+        {isBooked && (
+          <MaterialIcons name="block" size={24} color="#D11616" style={styles.blockedIcon} />
+        )}
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.barberInfo}>
@@ -57,7 +90,7 @@ export default function AppointmentScreen({ route, navigation }) {
         <FontAwesome5 name="calendar-alt" size={24} color="#fff" style={styles.calendarIcon} />
         <Text style={styles.selectDateButtonText}>Selecionar Data</Text>
       </TouchableOpacity>
-      
+
       {showDatePicker && (
         <DateTimePicker
           value={selectedDate}
@@ -74,15 +107,7 @@ export default function AppointmentScreen({ route, navigation }) {
       <Text style={styles.timePeriod}>Manhã</Text>
       <View style={styles.timeSlots}>
         {barber.availableTimes.morning.length > 0 ? (
-          barber.availableTimes.morning.map((time) => (
-            <TouchableOpacity
-              key={time}
-              style={[styles.timeSlot, selectedTime === time && styles.selectedTimeSlot]}
-              onPress={() => handleTimeSelection(time)}
-            >
-              <Text style={[styles.timeSlotText, selectedTime === time && styles.selectedTimeSlotText]}>{time}</Text>
-            </TouchableOpacity>
-          ))
+          barber.availableTimes.morning.map(renderTimeSlot)
         ) : (
           <Text style={styles.noTimeAvailableText}>Sem horários disponíveis para este turno.</Text>
         )}
@@ -91,15 +116,7 @@ export default function AppointmentScreen({ route, navigation }) {
       <Text style={styles.timePeriod}>Tarde</Text>
       <View style={styles.timeSlots}>
         {barber.availableTimes.afternoon.length > 0 ? (
-          barber.availableTimes.afternoon.map((time) => (
-            <TouchableOpacity
-              key={time}
-              style={[styles.timeSlot, selectedTime === time && styles.selectedTimeSlot]}
-              onPress={() => handleTimeSelection(time)}
-            >
-              <Text style={[styles.timeSlotText, selectedTime === time && styles.selectedTimeSlotText]}>{time}</Text>
-            </TouchableOpacity>
-          ))
+          barber.availableTimes.afternoon.map(renderTimeSlot)
         ) : (
           <Text style={styles.noTimeAvailableText}>Sem horários disponíveis para este turno.</Text>
         )}
@@ -108,15 +125,7 @@ export default function AppointmentScreen({ route, navigation }) {
       <Text style={styles.timePeriod}>Noite</Text>
       <View style={styles.timeSlots}>
         {barber.availableTimes.night.length > 0 ? (
-          barber.availableTimes.night.map((time) => (
-            <TouchableOpacity
-              key={time}
-              style={[styles.timeSlot, selectedTime === time && styles.selectedTimeSlot]}
-              onPress={() => handleTimeSelection(time)}
-            >
-              <Text style={[styles.timeSlotText, selectedTime === time && styles.selectedTimeSlotText]}>{time}</Text>
-            </TouchableOpacity>
-          ))
+          barber.availableTimes.night.map(renderTimeSlot)
         ) : (
           <Text style={styles.noTimeAvailableText}>Sem horários disponíveis para este turno.</Text>
         )}
@@ -126,7 +135,6 @@ export default function AppointmentScreen({ route, navigation }) {
         <Text style={styles.buttonText}>Agendar</Text>
       </TouchableOpacity>
     </View>
-    
   );
 }
 
@@ -169,6 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#D11616",
     width: '50%',
     padding: 10,
+    borderRadius: 10
   },
   selectDateButtonText: {
     fontSize: 18,
@@ -192,15 +201,28 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     margin: 5,
+    position: 'relative', // Added for positioning
   },
   selectedTimeSlot: {
     backgroundColor: '#D11616',
+  },
+  bookedTimeSlot: {
+    backgroundColor: '#999',
   },
   timeSlotText: {
     color: '#000',
   },
   selectedTimeSlotText: {
     color: '#fff',
+  },
+  bookedTimeSlotText: {
+    color: '#fff',
+  },
+  blockedIcon: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -1 }, { translateY: -2 }],
   },
   noTimeAvailableText: {
     fontSize: 16,
