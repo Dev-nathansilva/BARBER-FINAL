@@ -96,6 +96,11 @@ export default function HomeScreen({ navigation, route }) {
         }
       }
     }, [route.params]);
+
+    // Função para atualizar o nome de usuário na tela Home
+    const updateDisplayName = (newName) => {
+      setDisplayName(newName);
+    };
   
     const renderBarber = ({ item }) => (
       <TouchableOpacity
@@ -128,7 +133,7 @@ export default function HomeScreen({ navigation, route }) {
         <Text style={styles.welcomeText}>
             Bem-vindo, <Text style={styles.userName}>{displayName}</Text>
         </Text>
-        <TouchableOpacity style={styles.editbutton} onPress={() => navigation.navigate('EditProfile')}>
+        <TouchableOpacity style={styles.editbutton} onPress={() => navigation.navigate('EditProfile', { updateDisplayName })}>
             <Ionicons name="create-outline" size={24} color="#333" />
         </TouchableOpacity>
       </View>
@@ -148,7 +153,6 @@ export default function HomeScreen({ navigation, route }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
     container: {
       flex: 1,

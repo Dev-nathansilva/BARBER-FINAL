@@ -1,12 +1,11 @@
-// screens/EditProfileScreen.js
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { auth } from '../firebase';
 import { updateProfile, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider, sendEmailVerification } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native'; // Importe o método useNavigation
+import { Ionicons } from '@expo/vector-icons';
 
-const EditProfileScreen = () => {
+const EditProfileScreen = ({ route }) => {
   const [email, setEmail] = useState('');
   const [userName, setUserName] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
@@ -36,7 +35,10 @@ const EditProfileScreen = () => {
           displayName: userName,
         }).then(() => {
           Alert.alert('Sucesso', 'Nome de usuário atualizado com sucesso!');
-          navigation.navigate('Home', { userName }); // Navega para a tela "Home" com o novo nome de usuário
+          const { updateDisplayName } = route.params || {};
+          if (updateDisplayName) {
+            updateDisplayName(userName); // Chamamos a função updateDisplayName para atualizar o nome de usuário na tela Home
+          }
         }).catch((error) => {
           Alert.alert('Erro', error.message);
         });
@@ -112,7 +114,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#ccc',
   },
   title: {
     fontSize: 24,
@@ -122,7 +124,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    backgroundColor: '#D9D9D9',
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
