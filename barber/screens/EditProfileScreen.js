@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { auth } from '../firebase';
 import { updateProfile, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider, sendEmailVerification } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native'; // Importe o método useNavigation
@@ -78,34 +78,56 @@ const EditProfileScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Meu Perfil</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nome de Usuário"
-        value={userName}
-        onChangeText={setUserName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Senha Atual"
-        secureTextEntry
-        value={currentPassword}
-        onChangeText={setCurrentPassword}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Nova Senha"
-        secureTextEntry
-        value={newPassword}
-        onChangeText={setNewPassword}
-      />
-      <Button title="Atualizar Perfil" onPress={handleUpdateProfile} />
+      <View style={styles.header}>
+        <Ionicons name="person-circle-outline" size={24} color="#333" />
+        <Text style={styles.title}>
+          Meu Perfil
+        </Text>
+      </View>
+      <View style={styles.inputContainer}>
+        <Ionicons name="person-outline" size={24} color="#333" style={styles.inputIcon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Nome de Usuário"
+          value={userName}
+          onChangeText={setUserName}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Ionicons name="mail-outline" size={24} color="#333" style={styles.inputIcon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Ionicons name="lock-closed-outline" size={24} color="#333" style={styles.inputIcon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Senha Atual"
+          secureTextEntry
+          autoCompleteType="off"
+          value={currentPassword}
+          onChangeText={setCurrentPassword}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Ionicons name="lock-closed-outline" size={24} color="#333" style={styles.inputIcon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Nova Senha"
+          secureTextEntry
+          autoCompleteType="off"
+          value={newPassword}
+          onChangeText={setNewPassword}
+        />
+      </View>
+      <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
+        <Ionicons name="refresh" size={24} color="#fff" />
+        <Text style={styles.buttonText}>Atualizar Perfil</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -116,18 +138,46 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#ccc',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 24,
-    textAlign: 'center',
+    marginLeft: 8,
+    color: '#333',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  inputIcon: {
+    marginRight: 8,
   },
   input: {
+    flex: 1,
     borderWidth: 1,
     backgroundColor: '#D9D9D9',
     borderRadius: 8,
     padding: 12,
-    marginBottom: 16,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'orange',
+    borderRadius: 8,
+    paddingVertical: 16,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
   },
 });
 
