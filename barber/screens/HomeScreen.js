@@ -132,7 +132,7 @@ export default function HomeScreen({ navigation }) {
       />
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('MyAppointments')}
+        onPress={() => navigation.navigate('MyAppointments', { userName: displayName } )}
       >
         <Text style={styles.buttonText}>Ver Meus Agendamentos</Text>
       </TouchableOpacity>
