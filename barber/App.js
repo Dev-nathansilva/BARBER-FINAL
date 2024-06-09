@@ -9,6 +9,8 @@ import SignUpScreen from './screens/SignUpScreen';
 import HomeScreen from './screens/HomeScreen'; 
 import AppointmentScreen from './screens/AppointmentScreen'; // Importa a tela de agendamentos
 import MyAppointmentsScreen from './screens/MyAppointmentsScreen'; // Importa a tela de "Meus Agendamentos"
+import EditProfileScreen from './screens/EditProfileScreen'; // Importe a tela de editar perfil
+
 
 const Stack = createStackNavigator();
 
@@ -74,6 +76,20 @@ export default function App() {
           component={MyAppointmentsScreen}
           options={{
             title: 'Meus Agendamentos',
+            headerStyle: {
+              backgroundColor: '#D11616',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+         <Stack.Screen
+          name="EditProfile"
+          component={EditProfileScreen}
+          options={{
+            title: 'Editar Perfil',
             headerStyle: {
               backgroundColor: '#D11616',
             },
