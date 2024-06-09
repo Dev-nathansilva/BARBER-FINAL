@@ -95,7 +95,7 @@ export default function HomeScreen({ navigation }) {
   const renderBarber = ({ item }) => (
     <TouchableOpacity
       style={styles.barberContainer}
-      onPress={() => navigation.navigate('Appointment', { barber: item })}
+      onPress={() => navigation.navigate('Appointment', { barber: item, userName: displayName })}
     >
       <Image
         source={typeof item.imageUrl === 'string' ? { uri: item.imageUrl } : item.imageUrl}

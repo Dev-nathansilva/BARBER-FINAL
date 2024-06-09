@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, Alert  } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { collection, addDoc } from 'firebase/firestore';
+import { firestore } from '../firebase';
+
+
 
 export default function AppointmentScreen({ route, navigation }) {
-  const { barber } = route.params;
+  const { barber, userName } = route.params;
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -16,6 +20,30 @@ export default function AppointmentScreen({ route, navigation }) {
 
   const handleTimeSelection = (time) => {
     setSelectedTime(time);
+  };
+
+
+  const handleAppointment = async () => {
+
+    if (!selectedDate || !selectedTime) {
+      Alert.alert('Por favor, selecione uma data e um horário.');
+      return;
+    }
+
+    try {
+      // Adiciona um novo documento à coleção 'appointments'
+      const docRef = await addDoc(collection(firestore, 'appointments'), {
+        barberName: barber.name,
+        userName: userName,
+        date: selectedDate.toISOString().split('T')[0],
+        time: selectedTime,
+      });
+      console.log("Appointment added with ID: ", docRef.id);
+      Alert.alert('Agendamento confirmado!');
+      navigation.navigate('MyAppointments', { userName });
+    } catch (e) {
+      console.error("Error adding appointment: ", e);
+    }
   };
 
   return (
@@ -94,10 +122,11 @@ export default function AppointmentScreen({ route, navigation }) {
         )}
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => alert('Agendamento confirmado!')}>
+      <TouchableOpacity style={styles.button} onPress={handleAppointment}>
         <Text style={styles.buttonText}>Agendar</Text>
       </TouchableOpacity>
     </View>
+    
   );
 }
 
