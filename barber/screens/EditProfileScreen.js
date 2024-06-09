@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { auth } from '../firebase';
-import { updateProfile, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider, sendEmailVerification } from 'firebase/auth';
+import { updateProfile, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider, sendEmailVerification, signOut } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native'; 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -24,6 +24,16 @@ const EditProfileScreen = ({ route }) => {
     const user = auth.currentUser;
     const credential = EmailAuthProvider.credential(user.email, currentPassword);
     return reauthenticateWithCredential(user, credential);
+  };
+
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      console.log('Usuário deslogado')
+      navigation.navigate('Login')
+
+    }) .catch((error) => {
+        console.log(error)
+    })
   };
 
   const handleUpdateProfile = () => {
@@ -128,6 +138,11 @@ const EditProfileScreen = ({ route }) => {
         <Ionicons name="refresh" size={24} color="#fff" />
         <Text style={styles.buttonText}>Atualizar Perfil</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.buttonLogout} onPress={handleLogout}>
+        <Ionicons name="log-out-outline" size={24} color="#333" />
+        <Text style={styles.buttonText}>Sair</Text>
+      </TouchableOpacity>
+
     </View>
   );
 };
@@ -179,6 +194,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 8,
   },
+  buttonLogout:{
+    marginTop: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'red',
+    borderRadius: 8,
+    paddingVertical: 16,
+  }
 });
 
 export default EditProfileScreen;
