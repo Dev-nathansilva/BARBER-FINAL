@@ -12,6 +12,11 @@ const barbersData = [
     imageUrl: require('../assets/images/barbeiro1.png'),
     days: 'Segunda à Sexta',
     hours: '8h às 18h',
+    availableTimes: {
+        morning: ['08:00', '09:00', '10:00', '11:00'],
+        afternoon: ['12:00', '13:00', '14:00', '15:00', '16:00'],
+        night: ['18:00', '19:00', '20:00', '21:00', '22:00'],
+      },
   },
   {
     id: '2',
@@ -19,6 +24,11 @@ const barbersData = [
     imageUrl: require('../assets/images/barbeiro2.png'),
     days: 'Segunda à Sexta',
     hours: '8h às 18h',
+    availableTimes: {
+        morning: [],
+        afternoon: ['12:00', '13:00', '14:00', '15:00', '16:00'],
+        night: [],
+      },
   },
   {
     id: '3',
@@ -26,6 +36,11 @@ const barbersData = [
     imageUrl: require('../assets/images/barbeiro3.png'),
     days: 'Segunda à Sexta',
     hours: '8h às 18h',
+    availableTimes: {
+        morning: ['08:00', '09:00', '10:00', '11:00'],
+        afternoon: [],
+        night: ['18:00', '19:00', '20:00', '21:00', '22:00'],
+      },
   },
   {
     id: '4',
@@ -33,6 +48,11 @@ const barbersData = [
     imageUrl: require('../assets/images/barbeiro4.png'),
     days: 'Segunda à Sexta',
     hours: '8h às 18h',
+    availableTimes: {
+        morning: ['08:00', '09:00', '10:00', '11:00'],
+        afternoon: ['12:00', '13:00', '14:00', '15:00', '16:00'],
+        night: ['18:00', '19:00', '20:00', '21:00', '22:00'],
+      },
   },
   {
     id: '5',
@@ -40,6 +60,11 @@ const barbersData = [
     imageUrl: require('../assets/images/barbeiro5.png'),
     days: 'Segunda à Sexta',
     hours: '8h às 18h',
+    availableTimes: {
+        morning: ['08:00', '09:00', '10:00', '11:00'],
+        afternoon: ['12:00', '13:00', '14:00', '15:00', '16:00'],
+        night: [],
+      },
   },
   {
     id: '6',
@@ -47,6 +72,11 @@ const barbersData = [
     imageUrl: 'https://via.placeholder.com/50',
     days: 'Segunda à Sexta',
     hours: '8h às 18h',
+    availableTimes: {
+        morning: ['08:00', '09:00', '10:00', '11:00'],
+        afternoon: ['12:00', '13:00', '14:00', '15:00', '16:00'],
+        night: ['18:00', '19:00', '20:00', '21:00', '22:00'],
+      },
   },
   // Adicione mais barbeiros conforme necessário
 ];

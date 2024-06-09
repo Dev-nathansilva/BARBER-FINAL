@@ -1,15 +1,102 @@
-// screens/AppointmentScreen.js
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { FontAwesome5 } from '@expo/vector-icons';
 
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-
-export default function AppointmentScreen({ route }) {
+export default function AppointmentScreen({ route, navigation }) {
   const { barber } = route.params;
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setSelectedDate(currentDate);
+  };
+
+  const handleTimeSelection = (time) => {
+    setSelectedTime(time);
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Agendamento com {barber.name}</Text>
-      {/* Conteúdo da tela de agendamento aqui */}
+      <View style={styles.barberInfo}>
+        <Image source={typeof barber.imageUrl === 'string' ? { uri: barber.imageUrl } : barber.imageUrl} style={styles.barberImage} />
+        <Text style={styles.barberName}>{barber.name}</Text>
+      </View>
+
+      <TouchableOpacity style={styles.selectDateButton} onPress={() => setShowDatePicker(!showDatePicker)}>
+        <FontAwesome5 name="calendar-alt" size={24} color="#fff" style={styles.calendarIcon} />
+        <Text style={styles.selectDateButtonText}>Selecionar Data</Text>
+      </TouchableOpacity>
+      
+      {showDatePicker && (
+        <DateTimePicker
+          value={selectedDate}
+          mode="date"
+          display="default"
+          onChange={onChangeDate}
+          style={[styles.datePicker, styles.leftAlign]}
+          locale="pt-BR"
+        />
+      )}
+
+      <Text style={styles.label}>Escolha o horário</Text>
+
+      <Text style={styles.timePeriod}>Manhã</Text>
+      <View style={styles.timeSlots}>
+        {barber.availableTimes.morning.length > 0 ? (
+          barber.availableTimes.morning.map((time) => (
+            <TouchableOpacity
+              key={time}
+              style={[styles.timeSlot, selectedTime === time && styles.selectedTimeSlot]}
+              onPress={() => handleTimeSelection(time)}
+            >
+              <Text style={[styles.timeSlotText, selectedTime === time && styles.selectedTimeSlotText]}>{time}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.noTimeAvailableText}>Sem horários disponíveis para este turno.</Text>
+        )}
+      </View>
+
+      <Text style={styles.timePeriod}>Tarde</Text>
+      <View style={styles.timeSlots}>
+        {barber.availableTimes.afternoon.length > 0 ? (
+          barber.availableTimes.afternoon.map((time) => (
+            <TouchableOpacity
+              key={time}
+              style={[styles.timeSlot, selectedTime === time && styles.selectedTimeSlot]}
+              onPress={() => handleTimeSelection(time)}
+            >
+              <Text style={[styles.timeSlotText, selectedTime === time && styles.selectedTimeSlotText]}>{time}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.noTimeAvailableText}>Sem horários disponíveis para este turno.</Text>
+        )}
+      </View>
+
+      <Text style={styles.timePeriod}>Noite</Text>
+      <View style={styles.timeSlots}>
+        {barber.availableTimes.night.length > 0 ? (
+          barber.availableTimes.night.map((time) => (
+            <TouchableOpacity
+              key={time}
+              style={[styles.timeSlot, selectedTime === time && styles.selectedTimeSlot]}
+              onPress={() => handleTimeSelection(time)}
+            >
+              <Text style={[styles.timeSlotText, selectedTime === time && styles.selectedTimeSlotText]}>{time}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.noTimeAvailableText}>Sem horários disponíveis para este turno.</Text>
+        )}
+      </View>
+
+      <TouchableOpacity style={styles.button} onPress={() => alert('Agendamento confirmado!')}>
+        <Text style={styles.buttonText}>Agendar</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -17,16 +104,92 @@ export default function AppointmentScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 16,
-    backgroundColor: '#ccc',
+    backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  barberInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 16,
-    textAlign: 'center',
-    color: '#333',
+  },
+  barberImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 16,
+  },
+  barberName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  datePicker: {
+    marginBottom: 16,
+  },
+  leftAlign: {
+    alignSelf: 'flex-start',
+  },
+  selectDateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    backgroundColor: "#D11616",
+    width: '50%',
+    padding: 10,
+  },
+  selectDateButtonText: {
+    fontSize: 18,
+    color: '#fff',
+  },
+  calendarIcon: {
+    marginRight: 8,
+  },
+  timePeriod: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  timeSlots: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  timeSlot: {
+    backgroundColor: '#ccc',
+    padding: 10,
+    borderRadius: 5,
+    margin: 5,
+  },
+  selectedTimeSlot: {
+    backgroundColor: '#D11616',
+  },
+  timeSlotText: {
+    color: '#000',
+  },
+  selectedTimeSlotText: {
+    color: '#fff',
+  },
+  noTimeAvailableText: {
+    fontSize: 16,
+    fontStyle: 'italic',
+    color: '#666',
+    marginLeft: 10,
+  },
+  button: {
+    backgroundColor: '#D11616',
+    borderRadius: 8,
+    padding: 16,
+    margin: 16,
+    marginTop: 30,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
