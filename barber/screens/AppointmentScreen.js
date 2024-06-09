@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, Modal } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons'; // Import the icon library
+import { MaterialIcons } from '@expo/vector-icons';
 import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
 
@@ -12,6 +12,7 @@ export default function AppointmentScreen({ route, navigation }) {
   const [selectedTime, setSelectedTime] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [bookedTimes, setBookedTimes] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchBookedTimes = async () => {
@@ -38,12 +39,20 @@ export default function AppointmentScreen({ route, navigation }) {
     }
   };
 
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
   const handleAppointment = async () => {
     if (!selectedDate || !selectedTime) {
       Alert.alert('Por favor, selecione uma data e um horário.');
       return;
     }
 
+    toggleModal();
+  };
+
+  const confirmAppointment = async () => {
     try {
       // Adiciona um novo documento à coleção 'appointments'
       const docRef = await addDoc(collection(firestore, 'appointments'), {
@@ -58,6 +67,7 @@ export default function AppointmentScreen({ route, navigation }) {
     } catch (e) {
       console.error("Error adding appointment: ", e);
     }
+    toggleModal();
   };
 
   const renderTimeSlot = (time) => {
@@ -134,6 +144,31 @@ export default function AppointmentScreen({ route, navigation }) {
       <TouchableOpacity style={styles.button} onPress={handleAppointment}>
         <Text style={styles.buttonText}>Agendar</Text>
       </TouchableOpacity>
+
+      <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => {
+        toggleModal();
+      }}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>
+            Você deseja realizar o agendamento com <Text style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{barber.name}</Text>, às <Text style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{selectedTime}</Text> do dia <Text style={{ fontStyle: 'italic', fontWeight: 'bold' }}>{selectedDate.toLocaleDateString()}</Text>?
+          </Text>
+          <View style={{ flexDirection: 'row', gap: 20 }}>
+            <TouchableOpacity style={styles.modalButton} onPress={confirmAppointment}>
+              <Text style={styles.modalButtonText}>Sim</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalButton} onPress={toggleModal}>
+              <Text style={styles.modalButtonText}>Não</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
     </View>
   );
 }
@@ -239,6 +274,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    width: '88%',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  modalButton: {
+    backgroundColor: '#D11616',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 50,
+    marginVertical: 5,
+  },
+  modalButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',

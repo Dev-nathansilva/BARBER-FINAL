@@ -38,7 +38,7 @@ export default function MyAppointmentsScreen({ route }) {
         style={styles.cancelButton}
         onPress={() => handleCancelAppointment(item.id)}
       >
-        <Text style={styles.cancelButtonText}>Deletar</Text>
+        <Text style={styles.cancelButtonText}>Cancelar</Text>
       </TouchableOpacity>
     </View>
   );
