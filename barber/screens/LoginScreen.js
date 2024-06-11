@@ -1,5 +1,4 @@
 // screens/LoginScreen.js
-
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Alert, Text, TouchableOpacity, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -26,11 +25,16 @@ export default function LoginScreen({ navigation }) {
     }
 
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigation.navigate('Home'); // Redireciona para a tela Home após o login bem-sucedido
+      .then((userCredential) => {
+        const user = userCredential.user;
+        if (user.emailVerified) {
+          navigation.navigate('Home'); // Redireciona para a tela Home após o login bem-sucedido
+        } else {
+          Alert.alert('Erro', 'Seu e-mail ainda não foi verificado. Por favor, verifique seu e-mail antes de fazer login.');
+        }
       })
       .catch(error => {
-        Alert.alert('Login failed', error.message);
+        Alert.alert('Falha no login', error.message);
       });
   };
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Alert, Text, TouchableOpacity, Image, KeyboardAvoidingView, Platform } from 'react-native';
-import { createUserWithEmailAndPassword, getAuth, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, updateProfile, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../firebase';
 import { Ionicons } from '@expo/vector-icons'; // Importando Ionicons
 
@@ -22,18 +22,25 @@ export default function SignUpScreen({ navigation }) {
       return;
     }
 
-    // Verifica se o email já está cadastrado
+    // Cria a conta com email e senha
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        // Atualiza o perfil com o nome do usuário
         updateProfile(user, {
           displayName: name 
         })
         .then(() => {
-          console.log("Nome de usuário atualizado:", auth.currentUser.displayName);
-          Alert.alert('Cadastro realizado', 'Sua conta foi criada com sucesso.');
-          navigation.navigate('Login');
+          // Envia o e-mail de verificação
+          sendEmailVerification(user)
+            .then(() => {
+              Alert.alert('Cadastro realizado', 'Sua conta foi criada com sucesso. Por favor, verifique seu e-mail antes de fazer login.');
+              navigation.navigate('Login');
+            })
+            .catch((error) => {
+              Alert.alert('Erro ao enviar e-mail de verificação', error.message);
+            });
         })
         .catch((error) => {
           Alert.alert('Erro ao cadastrar', error.message);
@@ -43,7 +50,6 @@ export default function SignUpScreen({ navigation }) {
         Alert.alert('Erro ao cadastrar', error.message);
       });
   };
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
